@@ -21,12 +21,18 @@ import { RouterLink } from 'vue-router';
       <input type="submit" value="Search" />
     </form>
 
-    <div class="movies-list">MOVIES</div>
+    <div class="movies-list">
+      <div class="movie" 
+      >
+        <!-- {{ movie.Title }} -->
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import { ref } from 'vue';
+import {options} from '@/env';
 export default {
   setup(){
     const search = ref("");
@@ -34,7 +40,15 @@ export default {
 
     const SearchMovies = () => {
       if (search.value != "" ){
-        console.log(search.value)
+        fetch(`https://api.themoviedb.org/3/search/multi?query=${search.value}&page=2`, options)
+        .then(res => res.json())
+        .then(res => {
+          movies.value = res.results;
+          search.value = "";
+          console.log(movies.value);
+          })
+          
+        .catch(err => console.error(err))
       }
     }
 
